@@ -4,10 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+//MongoDB
 var mongoose = require('mongoose');
 var mongooseConnection = require('./config/dbconfig.js');
+require('./models/list.js');
 
+//Routes
+var api = require('./routes/api.js');
 
 var app = express();
 
@@ -20,6 +23,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+//Routes
+app.use('/api', api);
 
 //Mongoose Connection
 var db = mongooseConnection.connection;
