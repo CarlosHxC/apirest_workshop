@@ -34,17 +34,34 @@ exports.findAll = function(req, res, next) {
   List.find({}, function(err, data) {
     if(err)
       console.log(err);
-    console.log(data);
     res.send(data);
   })
 }
 
 exports.itemFinished = function(req, res, next) {
-  var conditions = {completed: true, updated_at: Date.now};
-  List.update({id: req.body.id}, conditions, {upsert: true}, function(err) {
-    console.log("item updated");
-    res.send("updated");
-  });
+  var change = req.body.state;
+  var changed;
+  console.log("change" + change);
+  if(change == "true") {
+    changed = false;
+    console.log("true " + changed);
+    List.update({id: req.body.id}, {completed: false}, {upsert: true}, function(err) {
+      if(err)
+        console.log(err);
+      console.log("item updated false");
+      res.send("updated");
+    });
+  } else {
+    changed = true;
+    console.log("false " + changed);
+    List.update({id: req.body.id}, {completed: true}, {upsert: true}, function(err) {
+      if(err)
+        console.log(err);
+      console.log("item updated true");
+      res.send("updated");
+    });
+  }
+
 }
 
 exports.deleteItem = function(req, res, next) {
